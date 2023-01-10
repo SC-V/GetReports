@@ -111,6 +111,12 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
 
 streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
+
+def clear_cache():
+    st.legacy_caching.caching.clear_cache()
+
+st.button("Refresh data",on_click=clear_cache)
+
 option = st.selectbox(
     "Select report date:",
     ["Today", "Yesterday"]
