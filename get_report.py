@@ -112,10 +112,8 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
 streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
 
-def clear_cache():
-    st.legacy_caching.caching.clear_cache()
-
-st.button("Refresh data",on_click=clear_cache)
+if st.button("Refresh data"):
+    st.experimental_memo.clear()
 
 option = st.selectbox(
     "Select report date:",
@@ -123,7 +121,7 @@ option = st.selectbox(
 )
 
 
-@st.cache
+@st.experimental_memo
 def get_cached_report(period):
     report = get_report(period)  # This makes the function take 2s to run
     return report
@@ -165,7 +163,7 @@ TODAY = datetime.datetime.now(timezone("America/Mexico_City")).strftime("%Y-%m-%
     else datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=1)
 
 
-@st.cache
+@st.experimental_memo
 def convert_df(dataframe: pandas.DataFrame):
     return dataframe.to_csv().encode('utf-8')
 xlsx_report = convert_df(df)
