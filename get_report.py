@@ -5,6 +5,7 @@ import pandas
 from pytz import timezone
 from googleapiclient import discovery
 import streamlit as st
+import streamlit_analytics
 
 CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
