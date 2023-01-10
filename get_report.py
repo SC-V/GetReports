@@ -108,7 +108,7 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
     return result_frame
 
-
+streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
 option = st.selectbox(
     "Select report date:",
@@ -170,3 +170,4 @@ st.download_button(
     file_name=f'route_report_{TODAY}.csv',
     mime='text/csv',
 )
+streamlit_analytics.stop_tracking()
