@@ -99,16 +99,16 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
             report_route_id = claim['route_id']
         except:
             report_route_id = "No route"
-        row = [report_date, report_cutoff, report_route_id, report_client_id, report_claim_id,
+        row = [report_date, report_cutoff, report_client_id, report_claim_id,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
-               report_status, report_status_time, report_store_name, report_courier_name, report_courier_park]
+               report_status, report_status_time, report_store_name, report_courier_name, report_courier_park, report_route_id]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
-                                    columns=["date", "cutoff", "route_id", "client_id", "claim_id",
+                                    columns=["date", "cutoff", "client_id", "claim_id",
                                              "pickup_address", "receiver_address", "receiver_phone",
                                              "receiver_name", "status", "status_time",
-                                             "store_name", "courier_name", "courier_park"])
+                                             "store_name", "courier_name", "courier_park", "route_id"])
     orders_with_pod = get_pod_orders()
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
     return result_frame
@@ -124,17 +124,12 @@ option = st.selectbox(
     ["Today", "Yesterday"]
 )
 
-
 @st.experimental_memo
 def get_cached_report(period):
     report = get_report(period)  # This makes the function take 2s to run
     return report
 
-
-
-
 df = get_cached_report(option)
-
 
 statuses = st.multiselect(
     'Filter by status:',
