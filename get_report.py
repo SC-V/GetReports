@@ -133,8 +133,9 @@ def get_cached_report(period):
         pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
         pod_provision_rate = f"{pod_provision_rate:.0%}"
     except:
-        pod_provision_rate = "0%"
-    return report, routes_not_taken, pod_provision_rate
+        pod_provision_rate = "--"
+    delivered_today = len(report[report['status'].isin(['delivered', 'delivered_finish'])])
+    return report, routes_not_taken, pod_provision_rate, delivered_today
 
 df, routes_not_taken, pod_provision_rate = get_cached_report(option)
 
@@ -157,9 +158,10 @@ statuses = st.multiselect(
      'new',
      'pickup_arrived'])
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 col1.metric("Routes not taken", routes_not_taken)
 col2.metric("POD provision", pod_provision_rate)
+col3.metric("Delivered today", pod_provision_rate)
 
 if not statuses or statuses == []:
     df
