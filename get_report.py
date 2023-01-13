@@ -137,7 +137,7 @@ def get_cached_report(period):
     delivered_today = len(report[report['status'].isin(['delivered', 'delivered_finish'])])
     return report, routes_not_taken, pod_provision_rate, delivered_today
 
-df, routes_not_taken, pod_provision_rate = get_cached_report(option)
+df, routes_not_taken, pod_provision_rate, delivered_today = get_cached_report(option)
 
 statuses = st.multiselect(
     'Filter by status:',
