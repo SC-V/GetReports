@@ -95,13 +95,17 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
         except:
             report_courier_name = "No courier yet"
             report_courier_park = "No courier yet"
-        row = [report_date, report_cutoff, report_client_id, report_claim_id,
+        try:
+            report_route_id = claim['route_id']
+        except:
+            report_route_id = "No route"
+        row = [report_date, report_cutoff, report_route_id, report_client_id, report_claim_id,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
-                                    columns=["date", "cutoff", "client_id", "claim_id",
+                                    columns=["date", "cutoff", "route_id", "client_id", "claim_id",
                                              "pickup_address", "receiver_address", "receiver_phone",
                                              "receiver_name", "status", "status_time",
                                              "store_name", "courier_name", "courier_park"])
@@ -151,6 +155,12 @@ statuses = st.multiselect(
      'new',
      'pickup_arrived'])
 
+col1, col2 = st.columns(2)
+df_rnt = df.groupby(['store_name', 'courier_name'])['route_id'].nunique().reset_index()
+pod_provision_rate = len(df[df['proof'] == "Proof provided"]) / len(df[df['status'].isin(['delivered', 'delivered_finish'])])
+pod_provision_rate = f"{pod_provision_rate:.0%}"
+col1.metric("Routes not taken", str(len(df_rnt[df_rnt['courier_name'] == "No courier yet"])))
+col2.metric("POD provision", pod_provision_rate)
 
 if not statuses or statuses == []:
     df
