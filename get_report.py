@@ -161,7 +161,7 @@ statuses = st.multiselect(
 col1, col2, col3 = st.columns(3)
 col1.metric("Routes not taken", routes_not_taken)
 col2.metric("POD provision", pod_provision_rate)
-col3.metric("Delivered today", delivered_today)
+col3.metric(f"Delivered "{option}".lower()", delivered_today)
 
 if not statuses or statuses == []:
     df
