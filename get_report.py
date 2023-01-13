@@ -159,7 +159,7 @@ statuses = st.multiselect(
      'pickup_arrived'])
 
 col1, col2 = st.columns(2)
-routes_not_taken, pod_provision_rate = get_metrics():
+routes_not_taken, pod_provision_rate = get_metrics()
 col1.metric("Routes not taken", routes_not_taken)
 col2.metric("POD provision", pod_provision_rate)
 
