@@ -224,5 +224,4 @@ st.download_button(
     mime='text/csv',
 )
 
-st.map(df)
 streamlit_analytics.stop_tracking()
