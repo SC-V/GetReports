@@ -164,8 +164,8 @@ option = st.selectbox(
 @st.experimental_memo
 def get_cached_report(period):
     report = get_report(period)
-    df_rnt = report.groupby(['store_name', 'courier_name'])['route_id'].nunique().reset_index()
-    routes_not_taken = str(len(df_rnt[(df_rnt['courier_name'] == "No courier yet") & (~df_rnt['route_id'] == "No route")]))
+    df_rnt = report.groupby(['courier_name', 'route_id'])['store_name'].nunique().reset_index()
+    routes_not_taken = str(len(df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]))
     try:
         pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
         pod_provision_rate = f"{pod_provision_rate:.0%}"
