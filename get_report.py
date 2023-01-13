@@ -129,8 +129,11 @@ def get_cached_report(period):
     report = get_report(period)  # This makes the function take 2s to run
     df_rnt = report.groupby(['store_name', 'courier_name'])['route_id'].nunique().reset_index()
     routes_not_taken = str(len(df_rnt[df_rnt['courier_name'] == "No courier yet"]))
-    pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
-    pod_provision_rate = f"{pod_provision_rate:.0%}"
+    try:
+        pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
+        pod_provision_rate = f"{pod_provision_rate:.0%}"
+    except:
+        pod_provision_rate = "0%"
     return report, routes_not_taken, pod_provision_rate
 
 df, routes_not_taken, pod_provision_rate = get_cached_report(option)
