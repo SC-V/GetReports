@@ -129,6 +129,14 @@ def get_cached_report(period):
     report = get_report(period)  # This makes the function take 2s to run
     return report
 
+@st.experimental_memo
+def get_metrics():
+    df_rnt = df.groupby(['store_name', 'courier_name'])['route_id'].nunique().reset_index()
+    routes_not_taken = str(len(df_rnt[df_rnt['courier_name'] == "No courier yet"]))
+    pod_provision_rate = len(df[df['proof'] == "Proof provided"]) / len(df[df['status'].isin(['delivered', 'delivered_finish'])])
+    pod_provision_rate = f"{pod_provision_rate:.0%}"
+    return routes_not_taken, pod_provision_rate
+
 df = get_cached_report(option)
 
 statuses = st.multiselect(
@@ -151,10 +159,8 @@ statuses = st.multiselect(
      'pickup_arrived'])
 
 col1, col2 = st.columns(2)
-df_rnt = df.groupby(['store_name', 'courier_name'])['route_id'].nunique().reset_index()
-pod_provision_rate = len(df[df['proof'] == "Proof provided"]) / len(df[df['status'].isin(['delivered', 'delivered_finish'])])
-pod_provision_rate = f"{pod_provision_rate:.0%}"
-col1.metric("Routes not taken", str(len(df_rnt[df_rnt['courier_name'] == "No courier yet"])))
+routes_not_taken, pod_provision_rate = get_metrics():
+col1.metric("Routes not taken", routes_not_taken)
 col2.metric("POD provision", pod_provision_rate)
 
 if not statuses or statuses == []:
