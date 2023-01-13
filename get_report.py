@@ -38,47 +38,67 @@ def check_for_pod(row, orders_with_pod):
     return row
 
 
-def get_claims(date_from, date_to):
-    url = API_URL
+def get_claims(date_from, date_to, cursor=0):
+    url = "https://b2b.taxi.yandex.net/b2b/cargo/integration/v2/claims/search"
 
     payload = json.dumps({
-        "cursor": 0,
         "created_from": f"{date_from}T00:00:00-06:00",
         "created_to": f"{date_to}T23:59:59-06:00",
         "limit": 1000,
-    })
+        "cursor": cursor
+    }) if cursor == 0 else json.dumps({"cursor": cursor})
+
     headers = {
         'Content-Type': 'application/json',
         'Accept-Language': 'en',
-        'Authorization': f"Bearer {CLAIM_SECRET}"
+        'Authorization': f"Bearer {SECRET}"
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
     claims = json.loads(response.text)
-    return claims['claims']
+    cursor = None
+    try:
+        cursor = claims['cursor']
+        print(f"CURSOR: {cursor}")
+    except:
+        print("LAST PAGE PROCESSED")
+    return claims['claims'], cursor
 
 
-def get_report(option: str = "Today") -> pandas.DataFrame:
+def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
+
     offset_back = 0
     if option == "Yesterday":
         offset_back = 1
-    today = datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=offset_back)
-    search_from = today.replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=3)
-    search_to = today.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-    date_from = search_from.strftime("%Y-%m-%d")
-    date_to = search_to.strftime("%Y-%m-%d")
+    if not start_:
+        today = datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=offset_back)
+        search_from = today.replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=3)
+        search_to = today.replace(hour=23, minute=59, second=59, microsecond=999999)
+        date_from = search_from.strftime("%Y-%m-%d")
+        date_to = search_to.strftime("%Y-%m-%d")
+    else:
+        today = datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=offset_back)
+        date_from_offset = datetime.datetime.fromisoformat(start_).astimezone(
+            timezone("America/Mexico_City")) - datetime.timedelta(days=2)
+        date_from = date_from_offset.strftime("%Y-%m-%d")
+        date_to = end_
+
     today = today.strftime("%Y-%m-%d")
-
-    claims = get_claims(date_from, date_to)
     report = []
+    claims, cursor = get_claims(date_from, date_to)
+    while cursor:
+        new_page_claims, cursor = get_claims(date_from, date_to, cursor)
+        claims = claims + new_page_claims
     for claim in claims:
-        claim_from_time = claim['same_day_data']['delivery_interval']['from']
+        try:
+            claim_from_time = claim['same_day_data']['delivery_interval']['from']
+        except:
+            continue
         cutoff_time = datetime.datetime.fromisoformat(claim_from_time).astimezone(timezone("America/Mexico_City"))
         cutoff_date = cutoff_time.strftime("%Y-%m-%d")
-        if cutoff_date != today:
+        if cutoff_date != today and not start_:
             continue
-        report_date = today
         report_cutoff = cutoff_time.strftime("%Y-%m-%d %H:%M")
         report_client_id = claim['route_points'][1]['external_order_id']
         report_claim_id = claim['id']
@@ -89,6 +109,8 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
         report_status = claim['status']
         report_status_time = claim['updated_ts']
         report_store_name = claim['route_points'][0]['contact']['name']
+        report_longitude = claim['route_points'][1]['address']['coordinates'][0]
+        report_latitude = claim['route_points'][1]['address']['coordinates'][1]
         try:
             report_courier_name = claim['performer_info']['courier_name']
             report_courier_park = claim['performer_info']['legal_name']
@@ -96,21 +118,36 @@ def get_report(option: str = "Today") -> pandas.DataFrame:
             report_courier_name = "No courier yet"
             report_courier_park = "No courier yet"
         try:
+            report_return_reason = claim['route_points'][1]['return_reasons']
+            report_return_comment = claim['route_points'][1]['return_comment']
+        except:
+            report_return_reason = "No return reasons"
+            report_return_comment = "No return comments"
+        try:
+            report_autocancel_reason = claim['autocancel_reason']
+        except:
+            report_autocancel_reason = "No cancel reasons"
+        try:
             report_route_id = claim['route_id']
         except:
             report_route_id = "No route"
-        row = [report_date, report_cutoff, report_client_id, report_claim_id,
+        row = [report_cutoff, report_client_id, report_claim_id,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
-               report_status, report_status_time, report_store_name, report_courier_name, report_courier_park, report_route_id]
+               report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
+               report_return_reason, report_return_comment, report_autocancel_reason, report_route_id,
+               report_longitude, report_latitude]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
-                                    columns=["date", "cutoff", "client_id", "claim_id",
+                                    columns=["cutoff", "client_id", "claim_id",
                                              "pickup_address", "receiver_address", "receiver_phone",
                                              "receiver_name", "status", "status_time",
-                                             "store_name", "courier_name", "courier_park", "route_id"])
+                                             "store_name", "courier_name", "courier_park",
+                                             "return_reason", "return_comment", "cancel_comment",
+                                             "route_id", "lon", "lat"])
     orders_with_pod = get_pod_orders()
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
+    result_frame.insert(3, 'proof', result_frame.pop('proof'))
     return result_frame
 
 streamlit_analytics.start_tracking()
@@ -186,4 +223,6 @@ st.download_button(
     file_name=f'route_report_{TODAY}.csv',
     mime='text/csv',
 )
+
+st.map(df)
 streamlit_analytics.stop_tracking()
