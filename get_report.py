@@ -6,6 +6,8 @@ from pytz import timezone
 from googleapiclient import discovery
 import streamlit as st
 import streamlit_analytics
+import pydeck as pdk
+
 
 DEFAULT_CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
 CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
@@ -248,7 +250,29 @@ st.download_button(
 )
 
 with st.expander("Orders on a map:"):
-  st.caption(f'Points on map are not interactive, but allows to spot outliers – bad coordinates, too far away orders')
-  st.map(filtered_frame)
-
+    st.caption(f'Points on map are interactive, hower to check store name, status and order ids')
+    chart_data = filtered_frame
+    view_state_lat = filtered_frame['lat'].iloc[0]
+    view_state_lon = filtered_frame['lon'].iloc[0]
+    st.pydeck_chart(pdk.Deck(
+        map_style=None,
+        initial_view_state=pdk.ViewState(
+            latitude=view_state_lat,
+            longitude=view_state_lon,
+            zoom=10,
+            pitch=0,
+        ),
+        tooltip={"text": "{store_name}\n{status}\n{client_id}\n{claim_id}"},
+        layers=[
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=chart_data,
+                get_position='[lon, lat]',
+                get_color='[200, 30, 0, 160]',
+                get_radius=200,
+                pickable=True
+            ),
+        ],
+    ))
+  
 streamlit_analytics.stop_tracking()
