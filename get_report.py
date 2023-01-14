@@ -16,7 +16,8 @@ SHEET_ID = st.secrets["SHEET_ID"]
 API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
-               "Cubbo": 2}
+               "Cubbo": 2,
+               "Lens Market": 3}
 
 def get_pod_orders():
     service = discovery.build('sheets', 'v4', discoveryServiceUrl=
@@ -167,7 +168,7 @@ if st.sidebar.button("Refresh data", type="primary"):
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
-    ["Petco", "Quiken", "Cubbo"]
+    ["Petco", "Quiken", "Cubbo", "Lens Market"]
 )
 
 option = st.sidebar.selectbox(
