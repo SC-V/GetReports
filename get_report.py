@@ -151,9 +151,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "return_reason", "return_comment", "cancel_comment",
                                              "route_id", "lon", "lat"])
     orders_with_pod = get_pod_orders()
-    if orders_with_pod:
-        result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
-        result_frame.insert(3, 'proof', result_frame.pop('proof'))
+    result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
+    result_frame.insert(3, 'proof', result_frame.pop('proof'))
     return result_frame
 
 streamlit_analytics.start_tracking()
