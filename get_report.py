@@ -250,8 +250,8 @@ st.download_button(
 )
 
 with st.expander("Orders on a map:"):
-    st.caption(f'Points on map are interactive, hower to check store name, status and order ids')
-    chart_data = filtered_frame
+    chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
+    chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     view_state_lat = filtered_frame['lat'].iloc[0]
     view_state_lon = filtered_frame['lon'].iloc[0]
     st.pydeck_chart(pdk.Deck(
@@ -266,7 +266,15 @@ with st.expander("Orders on a map:"):
         layers=[
             pdk.Layer(
                 'ScatterplotLayer',
-                data=chart_data,
+                data=chart_data_delivered,
+                get_position='[lon, lat]',
+                get_color='[11, 102, 35, 160]',
+                get_radius=200,
+                pickable=True
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=chart_data_in_delivery,
                 get_position='[lon, lat]',
                 get_color='[200, 30, 0, 160]',
                 get_radius=200,
