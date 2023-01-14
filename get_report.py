@@ -118,6 +118,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_store_name = claim['route_points'][0]['contact']['name']
         report_longitude = claim['route_points'][1]['address']['coordinates'][0]
         report_latitude = claim['route_points'][1]['address']['coordinates'][1]
+        report_store_longitude = claim['route_points'][0]['address']['coordinates'][0]
+        report_store_latitude = claim['route_points'][0]['address']['coordinates'][1]
         try:
             report_courier_name = claim['performer_info']['courier_name']
             report_courier_park = claim['performer_info']['legal_name']
@@ -142,7 +144,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
                report_return_reason, report_return_comment, report_autocancel_reason, report_route_id,
-               report_longitude, report_latitude]
+               report_longitude, report_latitude, report_store_longitude, report_store_latitude]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
@@ -151,7 +153,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "receiver_name", "status", "status_time",
                                              "store_name", "courier_name", "courier_park",
                                              "return_reason", "return_comment", "cancel_comment",
-                                             "route_id", "lon", "lat"])
+                                             "route_id", "lon", "lat", "store_lon", "store_lat"])
     orders_with_pod = get_pod_orders()
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
     result_frame.insert(3, 'proof', result_frame.pop('proof'))
@@ -281,6 +283,14 @@ with st.expander("Orders on a map:"):
                 get_radius=200,
                 pickable=True
             ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=filtered_frame,
+                get_position='[store_lon, store_lat]',
+                get_color='[49, 51, 53, 160]',
+                get_radius=250,
+                pickable=True
+            )
         ],
     ))
   
