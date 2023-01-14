@@ -7,11 +7,14 @@ from googleapiclient import discovery
 import streamlit as st
 import streamlit_analytics
 
-CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
+DEFAULT_CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
+CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
 SHEET_ID = st.secrets["SHEET_ID"]
 API_URL = st.secrets["API_URL"]
-
+SECRETS_MAP = {"Petco": 0,
+               "Quiken": 1,
+               "Cubbo": 2}
 
 def get_pod_orders():
     service = discovery.build('sheets', 'v4', discoveryServiceUrl=
@@ -47,11 +50,13 @@ def get_claims(date_from, date_to, cursor=0):
         "limit": 1000,
         "cursor": cursor
     }) if cursor == 0 else json.dumps({"cursor": cursor})
+    
+    client_secret = CLAIM_SECRETS[SECRETS_MAP[selected_client]]
 
     headers = {
         'Content-Type': 'application/json',
         'Accept-Language': 'en',
-        'Authorization': f"Bearer {CLAIM_SECRET}"
+        'Authorization': f"Bearer {client_secret}"
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
@@ -146,26 +151,32 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "return_reason", "return_comment", "cancel_comment",
                                              "route_id", "lon", "lat"])
     orders_with_pod = get_pod_orders()
-    result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
-    result_frame.insert(3, 'proof', result_frame.pop('proof'))
+    if not orders_with_pod:
+        result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
+        result_frame.insert(3, 'proof', result_frame.pop('proof'))
     return result_frame
 
 streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
 
-if st.button("Refresh data"):
+if st.sidebar.button("Refresh data", type="primary"):
     st.experimental_memo.clear()
 
-option = st.selectbox(
+selected_client = st.sidebar.selectbox(
+    "Select client:",
+    ["Petco", "Quiken", "Cubbo"]
+)
+
+option = st.sidebar.selectbox(
     "Select report date:",
     ["Today", "Yesterday"]
 )
 
 @st.experimental_memo
 def get_cached_report(period):
-    report = get_report(period)
-    df_rnt = report.groupby(['courier_name', 'route_id'])['store_name'].nunique().reset_index()
-    routes_not_taken = str(len(df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]))
+    report = get_report(period)  # This makes the function take 2s to run
+    df_rnt = report.groupby(['courier_name', 'route_id', 'store_name'])['pickup_address'].nunique().reset_index()
+    routes_not_taken = df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]
     try:
         pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
         pod_provision_rate = f"{pod_provision_rate:.0%}"
@@ -176,7 +187,7 @@ def get_cached_report(period):
 
 df, routes_not_taken, pod_provision_rate, delivered_today = get_cached_report(option)
 
-statuses = st.multiselect(
+statuses = st.sidebar.multiselect(
     'Filter by status:',
     ['delivered',
      'pickuped',
@@ -195,30 +206,43 @@ statuses = st.multiselect(
      'new',
      'pickup_arrived'])
 
+
+stores = st.sidebar.multiselect(
+    "Select store:",
+    df["store_name"].unique()
+)
+
 col1, col2, col3 = st.columns(3)
-col1.metric("Routes not taken", routes_not_taken)
+col1.metric("Not pickuped routes", str(len(routes_not_taken)))
 col2.metric("POD provision", pod_provision_rate)
 col3.metric(f"Delivered {option.lower()}", delivered_today)
 
-if not statuses or statuses == []:
-    df
+if (not statuses or statuses == []) and (not stores or stores == []):
+    filtered_frame = df
+elif statuses and not stores:
+    filtered_frame = df[df['status'].isin(statuses)]
+elif stores and not statuses:
+    filtered_frame = df[df['store_name'].isin(stores)]
 else:
-    df[df['status'].isin(statuses)]
+    filtered_frame = df[(df['store_name'].isin(stores)) & (df['store_name'].isin(statuses))]
 
+st.dataframe(filtered_frame)
 
 TODAY = datetime.datetime.now(timezone("America/Mexico_City")).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=1)
 
-
 @st.experimental_memo
 def convert_df(dataframe: pandas.DataFrame):
     return dataframe.to_csv().encode('utf-8')
+
 xlsx_report = convert_df(df)
 
+stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
+st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]')
 
 st.download_button(
-    label="Download report as csv",
+    label="Download full report as csv",
     data=xlsx_report,
     file_name=f'route_report_{TODAY}.csv',
     mime='text/csv',
