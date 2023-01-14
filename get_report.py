@@ -247,4 +247,8 @@ st.download_button(
     mime='text/csv',
 )
 
+with st.expander("Orders on a map:"):
+  st.caption(f'Points on map are not interactive, but allows to spot outliers – bad coordinates, too far away orders')
+  st.map(filtered_frame)
+
 streamlit_analytics.stop_tracking()
