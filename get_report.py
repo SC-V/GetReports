@@ -265,7 +265,7 @@ with st.expander("Orders on a map:"):
             zoom=10,
             pitch=0,
         ),
-        tooltip={"text": "{store_name}\n{status}\n{client_id}\n{claim_id}"},
+        tooltip={"text": "{store_name} : {cutoff}\n{status}\n{client_id} : {claim_id}"},
         layers=[
             pdk.Layer(
                 'ScatterplotLayer',
