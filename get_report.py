@@ -250,6 +250,7 @@ st.download_button(
 )
 
 with st.expander("Orders on a map:"):
+    st.caption(f'Hower order to see details. :green[Green] orders are delivered, and :red[red] – are the in delivery, returning or canncelled state')
     chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     view_state_lat = filtered_frame['lat'].iloc[0]
