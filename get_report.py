@@ -163,7 +163,6 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
 streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
 
-st.sidebar.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif")
 if st.sidebar.button("Refresh data", type="primary"):
     st.experimental_memo.clear()
 st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this button to get a fresh report")
@@ -302,4 +301,6 @@ with st.expander("Orders on a map:"):
         ],
     ))
   
+st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=70)
+
 streamlit_analytics.stop_tracking()
