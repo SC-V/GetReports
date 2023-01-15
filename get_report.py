@@ -185,13 +185,13 @@ def get_cached_report(period):
     df_rnt = report.groupby(['courier_name', 'route_id', 'store_name'])['pickup_address'].nunique().reset_index()
     routes_not_taken = df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]
     df_pna = report.groupby(['courier_name', 'route_id', 'store_name', 'status'])['pickup_address'].nunique().reset_index()
-    pickup_not_arrived = df_pna[df_rnt['status'].isin(['delivered', 'delivered_finish'])]
+    pickup_not_arrived = df_pna[df_rnt['status'].isin(['performer_found', 'pickup_arrived'])]
     try:
         pod_provision_rate = len(report[report['proof'] == "Proof provided"]) / len(report[report['status'].isin(['delivered', 'delivered_finish'])])
         pod_provision_rate = f"{pod_provision_rate:.0%}"
     except:
         pod_provision_rate = "--"
-    delivered_today = len(report[report['status'].isin(['performer_found', 'pickup_arrived'])])
+    delivered_today = len(report[report['status'].isin(['delivered', 'delivered_finish'])])
     return report, routes_not_taken, pickup_not_arrived, pod_provision_rate, delivered_today
 
 df, routes_not_taken, pickup_not_arrived, pod_provision_rate, delivered_today = get_cached_report(option)
@@ -255,7 +255,7 @@ xlsx_report = convert_df(df)
 
 stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
 stores_with_not_pickuped_parcels = ', '.join(str(x) for x in pickup_not_arrived["store_name"].unique()
-st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]. Stores with a courier, where pickup is not completed: :red[{stores_with_not_pickuped_parcels}]')
+st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes – :red[{stores_with_not_taken_routes}]. Stores with a courier, where pickup is not completed – :red[{stores_with_not_pickuped_parcels}]')
 
                                              
 st.download_button(
