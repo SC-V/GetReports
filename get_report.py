@@ -252,7 +252,6 @@ def convert_df(dataframe: pandas.DataFrame):
 xlsx_report = convert_df(df)
 
 stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
-stores_with_not_pickuped_parcels = ', '.join(str(x) for x in pickup_not_arrived["store_name"].unique()
 st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]')
                         
 st.download_button(
