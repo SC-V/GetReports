@@ -308,6 +308,7 @@ with st.expander("Orders on a map:"):
                 get_text='cutoff',
                 get_color='[0, 0, 0]',
                 get_size=12,
+                get_pixel_offset='[0, 10]'
                 pickable=False
             )
         ],
