@@ -213,7 +213,7 @@ statuses = st.sidebar.multiselect(
 
 
 stores = st.sidebar.multiselect(
-    "Select store:",
+    "Filter by stores:",
     df["store_name"].unique()
 )
 
