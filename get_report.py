@@ -300,7 +300,6 @@ with st.expander("Orders on a map:"):
             )
         ],
     ))
-  
-st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=70)
+    st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=50)
 
 streamlit_analytics.stop_tracking()
