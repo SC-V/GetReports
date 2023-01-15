@@ -225,8 +225,8 @@ if only_no_proofs:
   df = df[df["proof"] == "No proof"]
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Not pickuped routes", str(len(routes_not_taken)))
-col2.metric("POD provision", pod_provision_rate)
+col1.metric("Not pickuped routes :minibus:", str(len(routes_not_taken)))
+col2.metric("POD provision :camera:", pod_provision_rate)
 col3.metric(f"Delivered {option.lower()} :package:", delivered_today)
 
 if (not statuses or statuses == []) and (not stores or stores == []):
