@@ -268,6 +268,7 @@ with st.expander("Orders on a map:"):
     view_state_lat = filtered_frame['lat'].iloc[0]
     view_state_lon = filtered_frame['lon'].iloc[0]
     stores_on_a_map = filtered_frame.groupby(['store_name', 'store_lon', 'store_lat'])['cutoff'].agg(lambda x: ', '.join(x.unique())).reset_index(drop=False)
+    stores_on_a_map['cutoff'] = stores_on_a_map['cutoff'].str.split(' ')[1]
     stores_on_a_map.columns = ['store_name', 'store_lon', 'store_lat', 'cutoff']
     st.pydeck_chart(pdk.Deck(
         map_style=None,
