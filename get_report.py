@@ -255,9 +255,7 @@ xlsx_report = convert_df(df)
 
 stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
 stores_with_not_pickuped_parcels = ', '.join(str(x) for x in pickup_not_arrived["store_name"].unique()
-st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table.')
-st.caption(f'Stores with active orders without assigned courier, please check if cancellation needed: :red[{stores_with_not_taken_routes}]')
-st.caption(f'Stores with a courier, where pickup is not completed: :red[{stores_with_not_pickuped_parcels}]')
+st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]. Stores with a courier, where pickup is not completed: :red[{stores_with_not_pickuped_parcels}]')
 
                                              
 st.download_button(
