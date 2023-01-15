@@ -269,7 +269,6 @@ with st.expander("Orders on a map:"):
     view_state_lon = filtered_frame['lon'].iloc[0]
     stores_on_a_map = filtered_frame.groupby(['store_name', 'store_lon', 'store_lat'])['cutoff'].agg(lambda x: ',\n'.join(x.unique())).reset_index(drop=False)
     stores_on_a_map.columns = ['store_name', 'store_lon', 'store_lat', 'cutoff']
-    st.dataframe(stores_on_a_map)
     st.pydeck_chart(pdk.Deck(
         map_style=None,
         initial_view_state=pdk.ViewState(
@@ -308,7 +307,7 @@ with st.expander("Orders on a map:"):
                 'TextLayer',
                 data=stores_on_a_map,
                 get_position='[store_lon, store_lat]',
-                get_text='[cutoff, store_name]',
+                get_text='{store_name}\n{cutoff}',
                 get_color='[0, 0, 0]',
                 get_size=12,
                 get_pixel_offset='[0, 15]',
