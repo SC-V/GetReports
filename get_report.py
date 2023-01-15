@@ -181,7 +181,7 @@ option = st.sidebar.selectbox(
 
 @st.experimental_memo
 def get_cached_report(period):
-    report = get_report(period)  # This makes the function take 2s to run
+    report = get_report(period)
     df_rnt = report.groupby(['courier_name', 'route_id', 'store_name'])['pickup_address'].nunique().reset_index()
     routes_not_taken = df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]
     try:
@@ -254,8 +254,7 @@ xlsx_report = convert_df(df)
 stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
 stores_with_not_pickuped_parcels = ', '.join(str(x) for x in pickup_not_arrived["store_name"].unique()
 st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]')
-
-                                             
+                        
 st.download_button(
     label="Download full report as csv",
     data=xlsx_report,
