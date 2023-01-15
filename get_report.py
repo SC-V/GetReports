@@ -227,7 +227,7 @@ if only_no_proofs:
 col1, col2, col3 = st.columns(3)
 col1.metric("Not pickuped routes", str(len(routes_not_taken)))
 col2.metric("POD provision", pod_provision_rate)
-col3.metric(f"Delivered {option.lower()}", delivered_today)
+col3.metric(f"Delivered {option.lower()}", f"{delivered_today} :package:")
 
 if (not statuses or statuses == []) and (not stores or stores == []):
     filtered_frame = df
