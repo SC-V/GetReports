@@ -306,7 +306,7 @@ with st.expander("Orders on a map:"):
                 data=filtered_frame,
                 get_position='[store_lon, store_lat]',
                 get_text='[cutoff, store_name]'
-                get_color='[0, 0, 0, 160]',
+                get_color='[0, 0, 0]',
                 get_size=12,
                 pickable=False
             )
