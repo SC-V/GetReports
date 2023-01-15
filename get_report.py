@@ -267,8 +267,8 @@ with st.expander("Orders on a map:"):
     chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     view_state_lat = filtered_frame['lat'].iloc[0]
     view_state_lon = filtered_frame['lon'].iloc[0]
+    filtered_frame['cutoff'] = filtered_frame['cutoff'].str.split(' ').str[1]
     stores_on_a_map = filtered_frame.groupby(['store_name', 'store_lon', 'store_lat'])['cutoff'].agg(lambda x: ', '.join(x.unique())).reset_index(drop=False)
-    stores_on_a_map['cutoff'] = stores_on_a_map['cutoff'].str.split(' ')[1]
     stores_on_a_map.columns = ['store_name', 'store_lon', 'store_lat', 'cutoff']
     st.pydeck_chart(pdk.Deck(
         map_style=None,
