@@ -261,7 +261,7 @@ st.download_button(
     mime='text/csv',
 )
 
-with st.expander("Orders on a map:"):
+with st.expander(":round_pushpin: Orders on a map:"):
     st.caption(f'Hover order to see details. Stores are the big points on a map. :green[Green] orders are delivered, and :red[red] – are the in delivery, returning or cancelled state')
     chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
