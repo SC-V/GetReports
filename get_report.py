@@ -305,7 +305,7 @@ with st.expander("Orders on a map:"):
                 'TextLayer',
                 data=filtered_frame,
                 get_position='[store_lon, store_lat]',
-                get_text='[cutoff, store_name]',
+                get_text='cutoff',
                 get_color='[0, 0, 0]',
                 get_size=12,
                 pickable=False
