@@ -307,7 +307,7 @@ with st.expander("Orders on a map:"):
                 'TextLayer',
                 data=stores_on_a_map,
                 get_position='[store_lon, store_lat]',
-                get_text='{store_name}\n{cutoff}',
+                get_text='store_name\ncutoff',
                 get_color='[0, 0, 0]',
                 get_size=12,
                 get_pixel_offset='[0, 15]',
