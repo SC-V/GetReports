@@ -310,8 +310,8 @@ with st.expander("Orders on a map:"):
                 get_position='[store_lon, store_lat]',
                 get_text='store_name',
                 get_color='[0, 0, 0]',
-                get_size=10,
-                get_pixel_offset='[0, 15]',
+                get_size=12,
+                get_pixel_offset='[0, 20]',
                 pickable=False
             ),
             pdk.Layer(
@@ -320,8 +320,8 @@ with st.expander("Orders on a map:"):
                 get_position='[store_lon, store_lat]',
                 get_text='cutoff',
                 get_color='[0, 0, 0]',
-                get_size=10,
-                get_pixel_offset='[0, 30]',
+                get_size=12,
+                get_pixel_offset='[0, 40]',
                 pickable=False
             )
         ],
