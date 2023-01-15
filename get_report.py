@@ -165,7 +165,7 @@ st.markdown(f"# Routes report")
 
 if st.sidebar.button("Refresh data", type="primary"):
     st.experimental_memo.clear()
-st.sidebar.caption(f"Press this button to refrersh data. No need to reload the page")
+st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this button to get a fresh report")
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
