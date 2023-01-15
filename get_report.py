@@ -55,7 +55,7 @@ def get_claims(date_from, date_to, cursor=0):
     }) if cursor == 0 else json.dumps({"cursor": cursor})
     
     client_secret = CLAIM_SECRETS[SECRETS_MAP[selected_client]]
-
+    
     headers = {
         'Content-Type': 'application/json',
         'Accept-Language': 'en',
@@ -78,17 +78,19 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     offset_back = 0
     if option == "Yesterday":
         offset_back = 1
-
+    
+    client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] == 3 else "America/Mexico_City"
+    
     if not start_:
-        today = datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=offset_back)
+        today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
         search_from = today.replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=3)
         search_to = today.replace(hour=23, minute=59, second=59, microsecond=999999)
         date_from = search_from.strftime("%Y-%m-%d")
         date_to = search_to.strftime("%Y-%m-%d")
     else:
-        today = datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=offset_back)
+        today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
         date_from_offset = datetime.datetime.fromisoformat(start_).astimezone(
-            timezone("America/Mexico_City")) - datetime.timedelta(days=2)
+            timezone(client_timezone)) - datetime.timedelta(days=2)
         date_from = date_from_offset.strftime("%Y-%m-%d")
         date_to = end_
 
@@ -103,7 +105,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             claim_from_time = claim['same_day_data']['delivery_interval']['from']
         except:
             continue
-        cutoff_time = datetime.datetime.fromisoformat(claim_from_time).astimezone(timezone("America/Mexico_City"))
+        cutoff_time = datetime.datetime.fromisoformat(claim_from_time).astimezone(timezone(client_timezone))
         cutoff_date = cutoff_time.strftime("%Y-%m-%d")
         if cutoff_date != today and not start_:
             continue
@@ -238,9 +240,10 @@ else:
 
 st.dataframe(filtered_frame)
 
-TODAY = datetime.datetime.now(timezone("America/Mexico_City")).strftime("%Y-%m-%d") \
+client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] == 3 else "America/Mexico_City"
+TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
-    else datetime.datetime.now(timezone("America/Mexico_City")) - datetime.timedelta(days=1)
+    else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
 
 @st.experimental_memo
 def convert_df(dataframe: pandas.DataFrame):
