@@ -267,6 +267,7 @@ with st.expander("Orders on a map:"):
     chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
     view_state_lat = filtered_frame['lat'].iloc[0]
     view_state_lon = filtered_frame['lon'].iloc[0]
+    stores_on_a_map = filtered_frame.groupby(['cutoff', 'store_name', 'store_lon', 'store_lat'])['pickup_address'].nunique().reset_index()
     st.pydeck_chart(pdk.Deck(
         map_style=None,
         initial_view_state=pdk.ViewState(
@@ -303,7 +304,7 @@ with st.expander("Orders on a map:"):
             ),
             pdk.Layer(
                 'TextLayer',
-                data=filtered_frame,
+                data=stores_on_a_map,
                 get_position='[store_lon, store_lat]',
                 get_text='store_name',
                 get_color='[0, 0, 0]',
@@ -313,6 +314,6 @@ with st.expander("Orders on a map:"):
             )
         ],
     ))
-    st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=50)
+    st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=30)
 
 streamlit_analytics.stop_tracking()
