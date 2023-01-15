@@ -165,6 +165,7 @@ st.markdown(f"# Routes report")
 
 if st.sidebar.button("Refresh data", type="primary"):
     st.experimental_memo.clear()
+st.caption(f"Press this button to refrersh data. No need to reload the page")
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
@@ -215,6 +216,11 @@ stores = st.sidebar.multiselect(
     "Select store:",
     df["store_name"].unique()
 )
+
+only_no_proofs = st.sidebar.checkbox("Only parcels without proofs")
+
+if only_no_proofs:
+  df = df[df["proof"] == "No proof"]
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Not pickuped routes", str(len(routes_not_taken)))
