@@ -202,6 +202,7 @@ statuses = st.sidebar.multiselect(
      'cancelled_by_taxi',
      'delivery_arrived',
      'cancelled',
+     'performer_lookup',
      'performer_found',
      'performer_draft',
      'returned_finish',
