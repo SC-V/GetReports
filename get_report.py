@@ -80,6 +80,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     offset_back = 0
     if option == "Yesterday":
         offset_back = 1
+    elif option == "Tomorrow":
+        offset_back = -1
     
     client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "America/Mexico_City"
     
@@ -178,7 +180,7 @@ selected_client = st.sidebar.selectbox(
 
 option = st.sidebar.selectbox(
     "Select report date:",
-    ["Today", "Yesterday"]
+    ["Today", "Yesterday", "Tomorrow"]
 )
 
 @st.experimental_memo
