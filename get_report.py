@@ -17,7 +17,9 @@ API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
                "Cubbo": 2,
-               "Lens Market": 3}
+               "Lens Market": 3,
+               "Ebebek": 4,
+               "Supplementer": 5}
 
 def get_pod_orders():
     service = discovery.build('sheets', 'v4', discoveryServiceUrl=
@@ -79,7 +81,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     if option == "Yesterday":
         offset_back = 1
     
-    client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] == 3 else "America/Mexico_City"
+    client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "America/Mexico_City"
     
     if not start_:
         today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
@@ -171,7 +173,7 @@ st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this bu
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
-    ["Petco", "Quiken", "Cubbo", "Lens Market"]
+    ["Petco", "Quiken", "Cubbo", "Lens Market", "Ebebek", "Supplementer"]
 )
 
 option = st.sidebar.selectbox(
@@ -241,7 +243,7 @@ else:
 
 st.dataframe(filtered_frame)
 
-client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] == 3 else "America/Mexico_City"
+client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "America/Mexico_City"
 TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
