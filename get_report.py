@@ -273,6 +273,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
     stores_on_a_map.columns = ['store_name', 'store_lon', 'store_lat', 'cutoff']
     st.pydeck_chart(pdk.Deck(
         map_style=None,
+        height=850,
         initial_view_state=pdk.ViewState(
             latitude=view_state_lat,
             longitude=view_state_lon,
