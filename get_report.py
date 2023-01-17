@@ -14,8 +14,7 @@ CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
 SHEET_ID = st.secrets["SHEET_ID"]
 API_URL = st.secrets["API_URL"]
-
-= {"Petco": 0,
+SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
                "Cubbo": 2,
                "Lens Market": 3,
