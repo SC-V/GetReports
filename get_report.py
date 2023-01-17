@@ -253,28 +253,15 @@ TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
 
-@st.experimental_memo
-def convert_df(dataframe: pandas.DataFrame):
-    return dataframe.to_csv().encode('utf-8')
-
-xlsx_report = convert_df(df)
-
 stores_with_not_taken_routes = ', '.join(str(x) for x in routes_not_taken["store_name"].unique())
 st.caption(f'Total of :blue[{len(filtered_frame)}] orders in the table. Following stores have not pickuped routes: :red[{stores_with_not_taken_routes}]')
-                        
-st.download_button(
-    label="Download full report as csv",
-    data=xlsx_report,
-    file_name=f'route_report_{TODAY}.csv',
-    mime='text/csv',
-)
 
 with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
     df.to_excel(writer, sheet_name='routes_report')
     writer.save()
 
     st.download_button(
-        label="Download full report as xlsx",
+        label="Download report as xlsx",
         data=FILE_BUFFER,
         file_name=f"route_report_{TODAY}.xlsx",
         mime="application/vnd.ms-excel"
