@@ -2,13 +2,14 @@ import datetime
 import requests
 import json
 import pandas
+import io
 from pytz import timezone
 from googleapiclient import discovery
 import streamlit as st
 import streamlit_analytics
 import pydeck as pdk
 
-
+FILE_BUFFER = io.BytesIO()
 DEFAULT_CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
 CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
@@ -268,8 +269,16 @@ st.download_button(
     mime='text/csv',
 )
 
-with open(df, 'rb') as my_file:
-    st.download_button(label = 'Download full report as xslx', data = my_file, file_name = 'routes_reoport.xlsx', mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+with pandas.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+    df.to_excel(writer, sheet_name='routes_report')
+    writer.save()
+
+    st.download_button(
+        label="Download full report as xlsx",
+        data=buffer,
+        file_name=f'route_report_{TODAY}.xlsx",
+        mime="application/vnd.ms-excel"
+    )
 
 with st.expander(":round_pushpin: Orders on a map:"):
     st.caption(f'Hover order to see details. Stores are the big points on a map. :green[Green] orders are delivered, and :red[red] – are the in delivery, returning or cancelled state')
