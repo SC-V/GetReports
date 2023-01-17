@@ -48,10 +48,11 @@ def check_for_pod(row, orders_with_pod):
 
 def get_claims(date_from, date_to, cursor=0):
     url = API_URL
-
+    
+    timezone_offset = "+03:00" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "-06:00"
     payload = json.dumps({
-        "created_from": f"{date_from}T00:00:00-06:00",
-        "created_to": f"{date_to}T23:59:59-06:00",
+        "created_from": f"{date_from}T00:00:00{timezone_offset}",
+        "created_to": f"{date_to}T23:59:59{timezone_offset}",
         "limit": 1000,
         "cursor": cursor
     }) if cursor == 0 else json.dumps({"cursor": cursor})
@@ -333,6 +334,5 @@ with st.expander(":round_pushpin: Orders on a map:"):
             )
         ],
     ))
-    st.image("https://yastatic.net/s3/newbiz-static-yango/v1/0.0.58/assets/img/icons/gif/car-small.gif", width=30)
 
 streamlit_analytics.stop_tracking()
