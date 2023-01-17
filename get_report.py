@@ -268,7 +268,7 @@ st.download_button(
     mime='text/csv',
 )
 
-with open("routes_report.csv", 'rb') as my_file:
+with open(df, 'rb') as my_file:
     st.download_button(label = 'Download full report as xslx', data = my_file, file_name = 'routes_reoport.xlsx', mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 with st.expander(":round_pushpin: Orders on a map:"):
