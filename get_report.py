@@ -186,7 +186,7 @@ st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this bu
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
-    ["Petco", "Quiken", "Cubbo", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri", "Mevsimi", "Candy Gift", "Akel", "Espresso Perfetto", "Ceviz Agaci", "Guven Sanat]
+    ["Petco", "Quiken", "Cubbo", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri", "Mevsimi", "Candy Gift", "Akel", "Espresso Perfetto", "Ceviz Agaci", "Guven Sanat"]
 )
 
 option = st.sidebar.selectbox(
