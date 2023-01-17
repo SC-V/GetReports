@@ -268,6 +268,9 @@ st.download_button(
     mime='text/csv',
 )
 
+with open(file_path, 'rb') as my_file:
+    st.download_button(label = 'Download full report as xslx', data = my_file, file_name = 'routes_reoport.xlsx', mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
 with st.expander(":round_pushpin: Orders on a map:"):
     st.caption(f'Hover order to see details. Stores are the big points on a map. :green[Green] orders are delivered, and :red[red] – are the in delivery, returning or cancelled state')
     chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
