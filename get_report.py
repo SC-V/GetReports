@@ -14,7 +14,8 @@ CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
 SHEET_ID = st.secrets["SHEET_ID"]
 API_URL = st.secrets["API_URL"]
-SECRETS_MAP = {"Petco": 0,
+
+= {"Petco": 0,
                "Quiken": 1,
                "Cubbo": 2,
                "Lens Market": 3,
@@ -49,7 +50,7 @@ def check_for_pod(row, orders_with_pod):
 def get_claims(date_from, date_to, cursor=0):
     url = API_URL
     
-    timezone_offset = "+03:00" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "-06:00"
+    timezone_offset = "+03:00" if SECRETS_MAP[selected_client] in [3, 4, 5] else "-06:00"
     payload = json.dumps({
         "created_from": f"{date_from}T00:00:00{timezone_offset}",
         "created_to": f"{date_to}T23:59:59{timezone_offset}",
@@ -84,7 +85,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     elif option == "Tomorrow":
         offset_back = -1
     
-    client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "America/Mexico_City"
+    client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [3, 4, 5] else "America/Mexico_City"
     
     if not start_:
         today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
@@ -247,7 +248,7 @@ else:
 
 st.dataframe(filtered_frame)
 
-client_timezone = "Europe/Istanbul" if CLAIM_SECRETS[SECRETS_MAP[selected_client]] in [3, 4, 5] else "America/Mexico_City"
+client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [3, 4, 5] else "America/Mexico_City"
 TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
