@@ -269,7 +269,7 @@ st.download_button(
     mime='text/csv',
 )
 
-with pandas.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
     df.to_excel(writer, sheet_name='routes_report')
     writer.save()
 
