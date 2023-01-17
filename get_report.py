@@ -275,7 +275,7 @@ with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
 
     st.download_button(
         label="Download full report as xlsx",
-        data=buffer,
+        data=FILE_BUFFER,
         file_name=f"route_report_{TODAY}.xlsx",
         mime="application/vnd.ms-excel"
     )
