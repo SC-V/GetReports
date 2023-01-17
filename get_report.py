@@ -307,7 +307,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
                 'ScatterplotLayer',
                 data=filtered_frame,
                 get_position='[store_lon, store_lat]',
-                get_color='[49, 51, 53, 160]',
+                get_color='[0, 128, 255, 160]',
                 get_radius=250,
                 pickable=True
             ),
@@ -316,7 +316,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
                 data=stores_on_a_map,
                 get_position='[store_lon, store_lat]',
                 get_text='store_name',
-                get_color='[0, 0, 0]',
+                get_color='[0, 128, 255]',
                 get_size=12,
                 get_pixel_offset='[0, 20]',
                 pickable=False
@@ -326,7 +326,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
                 data=stores_on_a_map,
                 get_position='[store_lon, store_lat]',
                 get_text='cutoff',
-                get_color='[0, 0, 0]',
+                get_color='[0, 128, 255]',
                 get_size=12,
                 get_pixel_offset='[0, 40]',
                 pickable=False
