@@ -317,7 +317,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
                 'ScatterplotLayer',
                 data=chart_data_cancelled,
                 get_position='[lon, lat]',
-                get_color='[215, 210, 203, 160]',
+                get_color='[215, 210, 203, 200]',
                 get_radius=200,
                 pickable=True
             ),
