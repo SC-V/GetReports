@@ -279,7 +279,8 @@ with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
 with st.expander(":round_pushpin: Orders on a map:"):
     st.caption(f'Hover order to see details. Stores are the big points on a map. :green[Green] orders are delivered, and :red[red] – are the in delivery, returning or cancelled state')
     chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
-    chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
+    chart_data_in_delivery = filtered_frame[~filtered_frame["status"].isin(['delivered', 'delivered_finish', 'cancelled', 'cancelled_by_taxi'])]
+    chart_data_cancelled = filtered_frame[filtered_frame["status"].isin(['cancelled', 'cancelled_by_taxi'])]
     view_state_lat = filtered_frame['lat'].iloc[0]
     view_state_lon = filtered_frame['lon'].iloc[0]
     filtered_frame['cutoff'] = filtered_frame['cutoff'].str.split(' ').str[1]
@@ -309,6 +310,14 @@ with st.expander(":round_pushpin: Orders on a map:"):
                 data=chart_data_in_delivery,
                 get_position='[lon, lat]',
                 get_color='[200, 30, 0, 160]',
+                get_radius=200,
+                pickable=True
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=chart_data_cancelled,
+                get_position='[lon, lat]',
+                get_color='[215, 210, 203, 160]',
                 get_radius=200,
                 pickable=True
             ),
