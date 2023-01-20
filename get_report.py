@@ -15,6 +15,8 @@ DEFAULT_CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
 CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
 SHEET_KEY = st.secrets["SHEET_KEY"]
 SHEET_ID = st.secrets["SHEET_ID"]
+COD_SHEET_KEY = st.secrets["COD_SHEET_KEY"]
+COD_SHEET_ID = st.secrets["COD_SHEET_ID"]
 API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
