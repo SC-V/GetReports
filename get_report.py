@@ -210,7 +210,6 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             report_route_id = "No route"
         try:
             report_price_of_goods = 0
-            report_goods = claim['items']
             for item in claim['items']:
                 report_price_of_goods += float(item['cost_value'])
         except:
@@ -308,6 +307,11 @@ stores = st.sidebar.multiselect(
     df["store_name"].unique()
 )
 
+couriers = st.sidebar.multiselect(
+    "Filter by courier:",
+    df["courier_name"].unique()
+)
+
 only_no_proofs = st.sidebar.checkbox("Only parcels without proofs")
 
 if only_no_proofs:
@@ -326,6 +330,9 @@ elif stores and not statuses:
     filtered_frame = df[df['store_name'].isin(stores)]
 else:
     filtered_frame = df[(df['store_name'].isin(stores)) & (df['store_name'].isin(statuses))]
+
+if couriers:
+    filtered_frame = df[df['courier_name'].isin(couriers)]
 
 st.dataframe(filtered_frame)
 
@@ -439,5 +446,11 @@ with st.expander(":round_pushpin: Orders on a map:"):
             )
         ],
     ))
+
+if selected_client == "Quiken":
+    with st.expander(":moneybag: Cash management:"):
+        st.caption(f'Shows, how much money couriers have with them – and for how many orders. Counting only delivered orders without proof of deposit provided.')
+        cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
+        st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
 streamlit_analytics.stop_tracking()
