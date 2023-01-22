@@ -267,7 +267,7 @@ def get_cached_report(period):
         report = get_report(period, start_="2022-12-31", end_="2023-01-31")
     else:
         report = get_report(period)
-    df_rnt = report[report['status'] != 'cancelled']
+    df_rnt = report[~report['status'].isin(["cancelled", "performer_not_found", "failed"])]
     df_rnt = df_rnt.groupby(['courier_name', 'route_id', 'store_name'])['pickup_address'].nunique().reset_index()
     routes_not_taken = df_rnt[(df_rnt['courier_name'] == "No courier yet") & (df_rnt['route_id'] != "No route")]
     try:
