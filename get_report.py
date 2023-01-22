@@ -320,7 +320,7 @@ if only_no_proofs:
 without_cancelled = st.sidebar.checkbox("Without cancels")
 
 if without_cancelled:
-    df = df[df["status"] != "cancelled"]    
+    df = df[~df["status"].isin(["cancelled", "performer_not_found", "failed"])]    
     
 col1, col2, col3 = st.columns(3)
 col1.metric("Not pickuped routes :minibus:", str(len(routes_not_taken)))
