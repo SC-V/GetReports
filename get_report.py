@@ -294,6 +294,7 @@ statuses = st.sidebar.multiselect(
      'performer_lookup',
      'performer_found',
      'performer_draft',
+     'returned',
      'returned_finish',
      'performer_not_found',
      'return_arrived',
