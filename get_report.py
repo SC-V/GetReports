@@ -254,6 +254,9 @@ selected_client = st.sidebar.selectbox(
      "Mevsimi", "Candy Gift", "Akel", "Espresso Perfetto", "Ceviz Agaci", "Guven Sanat"]
 )
 
+if selected_client == "Petco":
+    st.caption("Petco POD % metric now includes photos uploaded in the app. Data is synchronized every hour (once every XX:00)")
+
 option = st.sidebar.selectbox(
     "Select report date:",
     ["Today", "Yesterday", "Tomorrow", "Monthly"]
