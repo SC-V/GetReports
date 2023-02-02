@@ -329,7 +329,10 @@ if without_cancelled:
     
 col1, col2, col3 = st.columns(3)
 col1.metric("Not pickuped routes :minibus:", str(len(routes_not_taken)))
-col2.metric("POD provision :camera:", pod_provision_rate)
+if pod_provision_rate == "100%": 
+  col2.metric("POD provision :100:", pod_provision_rate)
+else:
+  col2.metric("POD provision :camera:", pod_provision_rate)
 col3.metric(f"Delivered {option.lower()} :package:", delivered_today)
 
 if (not statuses or statuses == []) and (not stores or stores == []):
