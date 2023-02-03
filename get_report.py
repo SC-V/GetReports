@@ -21,17 +21,19 @@ API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
                "Cubbo": 2,
-               "Lens Market": 3,
-               "Ebebek": 4,
-               "Supplementer": 5,
-               "Sadece-eczane": 6,
-               "Osevio Internet Hizmetleri": 7,
-               "Mevsimi": 8,
-               "Candy Gift": 9,
-               "Akel": 10,
-               "Espresso Perfetto": 11,
-               "Ceviz Agaci": 12,
-               "Guven Sanat": 13}
+               "Grupo Carso (T1)": 3,
+               "Paket Express": 4,
+               "Lens Market": 5,
+               "Ebebek": 6,
+               "Supplementer": 7,
+               "Sadece-eczane": 8,
+               "Osevio Internet Hizmetleri": 9,
+               "Mevsimi": 10,
+               "Candy Gift": 11,
+               "Akel": 12,
+               "Espresso Perfetto": 13,
+               "Ceviz Agaci": 14,
+               "Guven Sanat": 15}
 
 
 def calculate_distance(row):
@@ -108,7 +110,7 @@ def check_for_cod(row, orders_with_cod: dict):
 def get_claims(date_from, date_to, cursor=0):
     url = API_URL
 
-    timezone_offset = "+03:00" if SECRETS_MAP[selected_client] in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] else "-06:00"
+    timezone_offset = "+03:00" if SECRETS_MAP[selected_client] in [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] else "-06:00"
     payload = json.dumps({
         "created_from": f"{date_from}T00:00:00{timezone_offset}",
         "created_to": f"{date_to}T23:59:59{timezone_offset}",
@@ -142,8 +144,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     elif option == "Tomorrow":
         offset_back = -1
 
-    client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                                                            13] else "America/Mexico_City"
+    client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [5, 6, 7, 8, 9, 10, 11, 12,
+                                                                            13, 14, 15] else "America/Mexico_City"
 
     if not start_:
         today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
@@ -349,8 +351,8 @@ if couriers:
 
 st.dataframe(filtered_frame)
 
-client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                                                        13] else "America/Mexico_City"
+client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [5, 6, 7, 8, 9, 10, 11, 12,
+                                                                        13, 14, 15] else "America/Mexico_City"
 TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
