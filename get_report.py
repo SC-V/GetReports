@@ -173,8 +173,9 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             continue
         cutoff_time = datetime.datetime.fromisoformat(claim_from_time).astimezone(timezone(client_timezone))
         cutoff_date = cutoff_time.strftime("%Y-%m-%d")
-        if cutoff_date != today and not start_:
-            continue
+        if not start_:
+            if cutoff_date != today:
+                continue
         report_cutoff = cutoff_time.strftime("%Y-%m-%d %H:%M")
         report_client_id = claim['route_points'][1]['external_order_id']
         report_claim_id = claim['id']
