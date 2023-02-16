@@ -20,7 +20,7 @@ COD_SHEET_ID = st.secrets["COD_SHEET_ID"]
 API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
                "Quiken": 1,
-               "Cubbo": 2,
+               "Huevos": 2,
                "Grupo Carso (T1)": 3,
                "Paket Express": 4,
                "Lens Market": 5,
@@ -253,7 +253,7 @@ st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this bu
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
-    ["Petco", "Quiken", "Cubbo", "Grupo Carso (T1)", "Paket Express", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri",
+    ["Petco", "Quiken", "Huevos", "Grupo Carso (T1)", "Paket Express", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri",
      "Mevsimi", "Candy Gift", "Akel", "Espresso Perfetto", "Ceviz Agaci", "Guven Sanat"]
 )
 
