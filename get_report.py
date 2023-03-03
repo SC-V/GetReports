@@ -464,7 +464,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
     ))
 
 if selected_client == "Quiken":
-    with st.expander(":moneybag: Cash management:"):
+    with st.expander(":moneybag: Unreported cash on couriers:"):
         st.caption(f'Shows, how much money couriers have with them – and for how many orders. Counting only delivered orders without proof of deposit provided.')
         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
