@@ -55,7 +55,8 @@ statuses = {
     'accepted': {'type': '1. created', 'state': 'in progress'},
     'new': {'type': '1. created', 'state': 'in progress'},
     'pickup_arrived': {'type': '2. assigned', 'state': 'in progress'},
-    'estimating_failed': {'type': 'X. cancelled', 'state': 'final'}
+    'estimating_failed': {'type': 'X. cancelled', 'state': 'final'},
+    'cancelled_with_payment': {'type': 'X. cancelled', 'state': 'final'}
 }
 
 def calculate_distance(row):
