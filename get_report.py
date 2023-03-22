@@ -212,9 +212,9 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_latitude = claim['route_points'][1]['address']['coordinates'][1]
         report_store_longitude = claim['route_points'][0]['address']['coordinates'][0]
         report_store_latitude = claim['route_points'][0]['address']['coordinates'][1]
+        print(statuses[report_status]['type'])
+        print(statuses[report_status]['state'])
         try: 
-            print(statuses[report_status]['type'])
-            print(statuses[report_status]['state'])
             report_status_type = statuses[report_status]['type']
             report_status_is_final = statuses[report_status]['state']
         except:
