@@ -35,6 +35,26 @@ SECRETS_MAP = {"Petco": 0,
                "Ceviz Agaci": 14,
                "Guven Sanat": 15}
 
+statuses = {
+    'delivered': {'type': '4. delivered', 'state': 'in progress'},
+    'pickuped': {'type': '3. pickuped', 'state': 'in progress'},
+    'returning': {'type': '3. pickuped', 'state': 'in progress'},
+    'cancelled_by_taxi': {'type': 'X. cancelled', 'state': 'final'},
+    'delivery_arrived': {'type': '3. pickuped', 'state': 'in progress'},
+    'cancelled': {'type': 'X. cancelled', 'state': 'final'},
+    'performer_lookup': {'type': '1. created', 'state': 'in progress'},
+    'performer_found': {'type': '2. assigned', 'state': 'in progress'},
+    'performer_draft': {'type': '1. created', 'state': 'in progress'},
+    'returned': {'type': 'R. returned', 'state': 'in progress'},
+    'returned_finish': {'type': 'R. returned', 'state': 'final'},
+    'performer_not_found': {'type': 'X. cancelled', 'state': 'final'},
+    'return_arrived': {'type': '3. pickuped', 'state': 'in progress'},
+    'delivered_finish': {'type': '4. delivered', 'state': 'final'},
+    'failed': {'type': 'X. cancelled', 'state': 'final'},
+    'accepted': {'type': '1. created', 'state': 'in progress'},
+    'new': {'type': '1. created', 'state': 'in progress'},
+    'pickup_arrived': : {'type': '2. assigned', 'state': 'in progress'}
+}
 
 def calculate_distance(row):
     location_1 = (row["lat"], row["lon"])
@@ -191,6 +211,12 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_latitude = claim['route_points'][1]['address']['coordinates'][1]
         report_store_longitude = claim['route_points'][0]['address']['coordinates'][0]
         report_store_latitude = claim['route_points'][0]['address']['coordinates'][1]
+        try: 
+            report_status_type = statuses['report_status']['type']
+            report_status_is_final = statuses['report_status']['state']
+        except:
+            report_status_type = "?. other"
+            report_status_is_final = "unknown"
         try:
             report_courier_name = claim['performer_info']['courier_name']
             report_courier_park = claim['performer_info']['legal_name']
@@ -221,7 +247,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
                report_return_reason, report_return_comment, report_autocancel_reason, report_route_id,
-               report_longitude, report_latitude, report_store_longitude, report_store_latitude, report_price_of_goods]
+               report_longitude, report_latitude, report_store_longitude, report_store_latitude, report_price_of_goods,
+               report_status_type, report_status_is_final]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
@@ -230,17 +257,18 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "receiver_name", "status", "status_time",
                                              "store_name", "courier_name", "courier_park",
                                              "return_reason", "return_comment", "cancel_comment",
-                                             "route_id", "lon", "lat", "store_lon", "store_lat", "price_of_goods"])
+                                             "route_id", "lon", "lat", "store_lon", "store_lat", "price_of_goods",
+                                             "type", "is_final"])
     orders_with_pod = get_pod_orders()
     result_frame = result_frame.apply(lambda row: calculate_distance(row), axis=1)
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
     orders_with_cod = get_cod_orders()
     result_frame.insert(3, 'proof', result_frame.pop('proof'))
-    if selected_client in ["Quiken"]:
-        result_frame = result_frame.apply(lambda row: check_for_cod(row, orders_with_cod), axis=1)
-        result_frame.insert(4, 'cash_collected', result_frame.pop('cash_collected'))
-        result_frame.insert(5, 'cash_prooflink', result_frame.pop('cash_prooflink'))
-        result_frame.insert(6, 'price_of_goods', result_frame.pop('price_of_goods'))
+#     if selected_client in ["Not specified"]:
+#         result_frame = result_frame.apply(lambda row: check_for_cod(row, orders_with_cod), axis=1)
+#         result_frame.insert(4, 'cash_collected', result_frame.pop('cash_collected'))
+#         result_frame.insert(5, 'cash_prooflink', result_frame.pop('cash_prooflink'))
+#         result_frame.insert(6, 'price_of_goods', result_frame.pop('price_of_goods'))
     return result_frame
 
 
@@ -468,5 +496,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
 #         st.caption(f'Shows, how much money couriers have with them – and for how many orders. Counting only delivered orders without proof of deposit provided.')
 #         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
+
+st.dataframe(df.filtered_frame(['store_name', 'courier_name', 'is_final', 'type'])['claim_id'].agg(['count']).reset_index())
 
 streamlit_analytics.stop_tracking()
