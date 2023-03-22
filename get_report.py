@@ -497,6 +497,6 @@ with st.expander(":round_pushpin: Orders on a map:"):
 #         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
-st.dataframe(filtered_frame(['store_name', 'courier_name', 'is_final', 'type'])['claim_id'].agg(['count']).reset_index())
+st.dataframe(filtered_frame.groupby(['store_name', 'courier_name', 'is_final', 'type'])['claim_id'].agg(['count']).reset_index())
 
 streamlit_analytics.stop_tracking()
