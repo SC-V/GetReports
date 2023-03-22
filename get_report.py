@@ -502,6 +502,6 @@ with st.expander(":round_pushpin: Orders on a map:"):
 #         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
-st.dataframe(pandas.pivot_table(filtered_frame, values='claim_id', index=['is_final', 'store_name', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-"))
+st.dataframe(pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-"))
 
 streamlit_analytics.stop_tracking()
