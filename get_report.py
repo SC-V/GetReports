@@ -213,8 +213,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_store_longitude = claim['route_points'][0]['address']['coordinates'][0]
         report_store_latitude = claim['route_points'][0]['address']['coordinates'][1]
         try: 
-            report_status_type = statuses['report_status']['type']
-            report_status_is_final = statuses['report_status']['state']
+            report_status_type = statuses[report_status]['type']
+            report_status_is_final = statuses[report_status]['state']
         except:
             report_status_type = "?. other"
             report_status_is_final = "unknown"
