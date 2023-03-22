@@ -2,6 +2,7 @@ import datetime
 import requests
 import json
 import pandas
+import numpy
 import io
 import haversine as hs
 from pytz import timezone
@@ -497,6 +498,6 @@ with st.expander(":round_pushpin: Orders on a map:"):
 #         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
-st.dataframe(filtered_frame.groupby(['store_name', 'courier_name', 'is_final', 'type'])['claim_id'].agg(['count']).reset_index())
+st.dataframe(pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'courier_name'], columns=['is_final', 'type'], aggfunc=numpy.count, fill_value=0))
 
 streamlit_analytics.stop_tracking()
