@@ -141,7 +141,7 @@ def check_for_lateness(row):
     current_time = datetime.datetime.now().astimezone(timezone(client_timezone))
     difference = current_time - cutoff_time
     row['diff_min'] = difference
-    st.write(f"{cutoff_time} | {current_time} | {difference} | {diff_min}")
+    st.write(f"{cutoff_time} | {current_time} | {difference}")
     return row
     
     
