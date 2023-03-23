@@ -136,8 +136,9 @@ def check_for_cod(row, orders_with_cod: dict):
 def check_for_lateness(row):
     cutoff_time = datetime.datetime.strptime(row['cutoff'], "%H:%M").time()
     current_time = datetime.datetime.now().time()
-    difference = (current_time - cutoff_time).seconds / 60
+    difference = (datetime.combine(date.today(), current_time) - datetime.combine(date.today(), cutoff_time)).seconds / 60
     row['diff_min'] = difference
+    return row
     
     
 def get_claims(date_from, date_to, cursor=0):
