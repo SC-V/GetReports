@@ -147,9 +147,9 @@ def check_for_lateness(row):
     try:
         if (row["2. assigned"] not in ["-", 1] or row["3. pickuped"] not in ["-", 1]) and option == "Yesterday":
             row["cutoff"] = row["cutoff"] + " 🙀🙀🙀"
-        elif (row["1. created"] not in ["-", 1] or row["2. assigned"] not in ["-", 1] or row["3. pickuped"] not in ["-", 1]) and option == "Today" and difference_munutes >= 30:
+        elif (row["1. created"] not in ["-", 1] or row["2. assigned"] not in ["-", 1]) and option == "Today" and difference_munutes >= 30:
             row["cutoff"] = row["cutoff"] + " 🙀"
-        elif (row["1. created"] not in ["-", 1] or row["2. assigned"] not in ["-", 1] or row["3. pickuped"] not in ["-", 1]) and option == "Today" and difference_munutes >= 10:
+        elif (row["1. created"] not in ["-", 1] or row["2. assigned"] not in ["-", 1]) and option == "Today" and difference_munutes >= 10:
             row["cutoff"] = row["cutoff"] + " 🙀🙀🙀"
     except:
         print("No warnings")
