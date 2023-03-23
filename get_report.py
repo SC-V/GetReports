@@ -11,6 +11,8 @@ import streamlit as st
 import streamlit_analytics
 import pydeck as pdk
 
+st.set_page_config(layout="wide")
+
 FILE_BUFFER = io.BytesIO()
 DEFAULT_CLAIM_SECRET = st.secrets["CLAIM_SECRET"]
 CLAIM_SECRETS = st.secrets["CLAIM_SECRETS"]
