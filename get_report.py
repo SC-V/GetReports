@@ -134,7 +134,7 @@ def check_for_cod(row, orders_with_cod: dict):
 
   
 def check_for_lateness(row):
-    cutoff_time = datetime.datetime.strptime(row['cutoff'], "%Y-%m-%d %H:%M").time()
+    cutoff_time = datetime.datetime.strptime(row['cutoff'], "%H:%M").time()
     current_time = datetime.datetime.now().time()
     difference = (current_time - cutoff_time).seconds / 60
     row['diff_min'] = difference
