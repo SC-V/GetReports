@@ -139,7 +139,7 @@ def check_for_lateness(row):
     elif option == "Yesterday":
         cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().astimezone(timezone(client_timezone)).strftime('%Y-%m-%d') - datetime.timedelta(days=1)} {row['cutoff']}", "%Y-%m-%d %H:%M")
     current_time = datetime.datetime.now(timezone(client_timezone))
-    difference = (current_time - cutoff_time).seconds / 60
+    difference = (current_time.astimezone(timezone(client_timezone)) - cutoff_time.astimezone(timezone(client_timezone))).seconds / 60
     row['diff_min'] = difference
     st.write(f"{cutoff_time} | {current_time} | {difference}")
     return row
