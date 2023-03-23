@@ -513,8 +513,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
 with st.expander(":clipboard: Store/ route details"):
-    pivot_report_frame = pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'cutoff', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-").reindex()
-    pivot_report_frame.dtypes
+    pivot_report_frame = pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'cutoff', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-").reset_index()
     st.dataframe(pivot_report_frame, use_container_width=True)
     pivot_report_frame = pivot_report_frame.apply(lambda row: check_for_lateness(row), axis=1)
     st.dataframe(pivot_report_frame, use_container_width=True)
