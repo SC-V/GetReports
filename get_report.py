@@ -135,7 +135,7 @@ def check_for_cod(row, orders_with_cod: dict):
   
 def check_for_lateness(row):
     if option == "Today":
-        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today(hours=).strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M") 
+        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M") 
     elif option == "Yesterday":
         cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M")  # TODO: fix
     current_time = datetime.datetime.now()
