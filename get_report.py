@@ -432,7 +432,7 @@ with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
         mime="application/vnd.ms-excel"
     )
 
-with st.expander(":round_pushpin: Orders on a map:"):
+with st.expander(":round_pushpin: Orders on a map"):
     st.caption(
         f'Hover order to see details. Stores are the big points on a map. :green[Green] orders are delivered, and :red[red] – are the in delivery state. :orange[Orange] are returned or returning. Gray are cancelled.')
     chart_data_delivered = filtered_frame[filtered_frame["status"].isin(['delivered', 'delivered_finish'])]
