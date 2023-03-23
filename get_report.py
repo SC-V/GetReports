@@ -141,7 +141,7 @@ def check_for_lateness(row):
         cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d') - datetime.timedelta(days=1)} {row['cutoff']}", "%Y-%m-%d %H:%M")
         print(cutoff_time)
     current_time = datetime.datetime.now(timezone(client_timezone))
-    difference = (current_time.astimezone(timezone(client_timezone)) - cutoff_time.astimezone(timezone(client_timezone)))
+    difference = cutoff_time.astimezone(timezone(client_timezone)) - current_time.astimezone(timezone(client_timezone))
     difference = divmod(difference.days * 24 * 60 * 60 + difference.seconds, 60)
     row['diff_min'] = difference
     st.write(f"{cutoff_time} | {current_time} | {difference}")
