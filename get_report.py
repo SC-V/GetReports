@@ -135,11 +135,9 @@ def check_for_cod(row, orders_with_cod: dict):
   
 def check_for_lateness(row):
     if option == "Today":
-        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M") 
-        print(cutoff_time)
+        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today(hours=).strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M") 
     elif option == "Yesterday":
-        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d') - datetime.timedelta(days=1)} {row['cutoff']}", "%Y-%m-%d %H:%M")
-        print(cutoff_time)
+        cutoff_time = datetime.datetime.strptime(f"{datetime.datetime.today().strftime('%Y-%m-%d')} {row['cutoff']}", "%Y-%m-%d %H:%M")  # TODO: fix
     current_time = datetime.datetime.now()
     difference = current_time.astimezone(timezone(client_timezone)) - cutoff_time.astimezone(timezone(client_timezone))
     diff_min = difference.total_seconds() / 60
@@ -522,7 +520,7 @@ with st.expander(":round_pushpin: Orders on a map:"):
 
 with st.expander(":clipboard: Store/ route details"):
     pivot_report_frame = pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'cutoff', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-").reset_index()
-    pivot_report_frame = pivot_report_frame.apply(lambda row: check_for_lateness(row), axis=1)
+#     pivot_report_frame = pivot_report_frame.apply(lambda row: check_for_lateness(row), axis=1)
     st.dataframe(pivot_report_frame, use_container_width=True)
 
 streamlit_analytics.stop_tracking()
