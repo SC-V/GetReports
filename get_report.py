@@ -304,7 +304,8 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     result_frame = result_frame.apply(lambda row: calculate_distance(row), axis=1)
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
     orders_with_cod = get_cod_orders()
-    result_frame.insert(3, 'proof', result_frame.pop('proof'))
+    if option != "Tomorrow":
+        result_frame.insert(3, 'proof', result_frame.pop('proof'))
 #     if selected_client in ["Not specified"]:
 #         result_frame = result_frame.apply(lambda row: check_for_cod(row, orders_with_cod), axis=1)
 #         result_frame.insert(4, 'cash_collected', result_frame.pop('cash_collected'))
