@@ -23,21 +23,22 @@ COD_SHEET_KEY = st.secrets["COD_SHEET_KEY"]
 COD_SHEET_ID = st.secrets["COD_SHEET_ID"]
 API_URL = st.secrets["API_URL"]
 SECRETS_MAP = {"Petco": 0,
-               "Quiken": 1,
+               "Pets Table": 1,
                "Huevos": 2,
-               "Grupo Carso (T1)": 3,
-               "Paket Express": 4,
-               "Lens Market": 5,
-               "Ebebek": 6,
-               "Supplementer": 7,
-               "Sadece-eczane": 8,
-               "Osevio Internet Hizmetleri": 9,
-               "Mevsimi": 10,
-               "Candy Gift": 11,
-               "Akel": 12,
-               "Espresso Perfetto": 13,
-               "Ceviz Agaci": 14,
-               "Guven Sanat": 15}
+               "Inkovsky": 3,
+               "Baby Creisy": 4,
+               "Vigilancia Network": 5,
+               "Lens Market": 6,
+               "Ebebek": 7,
+               "Supplementer": 8,
+               "Sadece-eczane": 9,
+               "Osevio Internet Hizmetleri": 10,
+               "Mevsimi": 11,
+               "Candy Gift": 12,
+               "Akel": 13,
+               "Espresso Perfetto": 14,
+               "Ceviz Agaci": 15,
+               "Guven Sanat": 16}
 
 statuses = {
     'delivered': {'type': '4. delivered', 'state': 'in progress'},
@@ -171,7 +172,7 @@ def check_for_lateness(row):
 def get_claims(date_from, date_to, cursor=0):
     url = API_URL
 
-    timezone_offset = "+03:00" if SECRETS_MAP[selected_client] in [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] else "-06:00"
+    timezone_offset = "+03:00" if SECRETS_MAP[selected_client] in [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] else "-06:00"
     payload = json.dumps({
         "created_from": f"{date_from}T00:00:00{timezone_offset}",
         "created_to": f"{date_to}T23:59:59{timezone_offset}",
@@ -323,7 +324,7 @@ st.sidebar.caption(f"Page reload doesn't refresh the data.\nInstead, use this bu
 
 selected_client = st.sidebar.selectbox(
     "Select client:",
-    ["Petco", "Quiken", "Huevos", "Grupo Carso (T1)", "Paket Express", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri",
+    ["Petco", "Pets Table", "Huevos", "Inkovsky", "Baby Creisy", "Vigilancia Network", "Lens Market", "Ebebek", "Supplementer", "Sadece-eczane", "Osevio Internet Hizmetleri",
      "Mevsimi", "Candy Gift", "Akel", "Espresso Perfetto", "Ceviz Agaci", "Guven Sanat"]
 )
 
@@ -422,8 +423,8 @@ if couriers:
 
 st.dataframe(filtered_frame)
 
-client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [5, 6, 7, 8, 9, 10, 11, 12,
-                                                                        13, 14, 15] else "America/Mexico_City"
+client_timezone = "Europe/Istanbul" if SECRETS_MAP[selected_client] in [6, 7, 8, 9, 10, 11, 12,
+                                                                        13, 14, 15, 16] else "America/Mexico_City"
 TODAY = datetime.datetime.now(timezone(client_timezone)).strftime("%Y-%m-%d") \
     if option == "Today" \
     else datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=1)
