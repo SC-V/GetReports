@@ -538,9 +538,11 @@ with st.expander(":round_pushpin: Orders on a map"):
 #         cash_management_df = df[(df["status"].isin(['delivered', 'delivered_finish'])) & (df["cash_collected"] == "Not verified")]
 #         st.dataframe(cash_management_df.groupby(['courier_name'])['price_of_goods'].agg(['sum', 'count']).reset_index())
 
-with st.expander(":clipboard: Store/ route details"):
+with st.expander(":clipboard: Store/ route details"): 
     pivot_report_frame = pandas.pivot_table(filtered_frame, values='claim_id', index=['store_name', 'cutoff', 'courier_name'], columns=['type'], aggfunc=lambda x: len(x.unique()), fill_value="-").reset_index()
     pivot_report_frame = pivot_report_frame.apply(lambda row: check_for_lateness(row), axis=1)
+    if only_cats:
+        pivot_report_frame = pivot_report_frame[~pivot_report_frame["cutoff"].isin(["🙀"])]
     st.dataframe(pivot_report_frame, use_container_width=True)
 
 streamlit_analytics.stop_tracking()
