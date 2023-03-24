@@ -543,7 +543,7 @@ with st.expander(":clipboard: Store/ route details"):
     pivot_report_frame = pivot_report_frame.apply(lambda row: check_for_lateness(row), axis=1)
     only_cats = st.checkbox("Only concerned routes")
     if only_cats:
-        pivot_report_frame = pivot_report_frame[~pivot_report_frame["cutoff"].isin(["🙀"])]
+        pivot_report_frame = pivot_report_frame[pivot_report_frame['cutoff'].str.contains('🙀')]
     st.dataframe(pivot_report_frame, use_container_width=True)
 
 streamlit_analytics.stop_tracking()
