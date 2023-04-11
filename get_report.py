@@ -242,7 +242,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_client_id = claim['route_points'][1]['external_order_id']
         report_claim_id = claim['id']
         report_pickup_address = claim['route_points'][0]['address']['fullname']
-        report_pod_point_id = claim['route_points'][1]['id']
+        report_pod_point_id = str(claim['route_points'][1]['id'])
         report_receiver_address = claim['route_points'][1]['address']['fullname']
         report_receiver_phone = claim['route_points'][1]['contact']['phone']
         report_receiver_name = claim['route_points'][1]['contact']['name']
