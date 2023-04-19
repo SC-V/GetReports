@@ -5,6 +5,7 @@ import pandas
 import numpy
 import io
 import time
+import re
 import haversine as hs
 from pytz import timezone
 from googleapiclient import discovery
@@ -291,12 +292,19 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                 report_goods = report_goods + str(item['title']) + " |"
         except:
             report_goods = "Not specified"
+        try:
+            report_weight_kg = ""
+            for item in claim['items']:
+                if re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE):
+                    report_weight_kg = report_weight_kg + str(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0]) + " |"
+        except:
+            report_weight_kg = "Not found"
         row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
                report_return_reason, report_return_comment, report_autocancel_reason, report_route_id,
                report_longitude, report_latitude, report_store_longitude, report_store_latitude, report_price_of_goods, report_goods, 
-               report_status_type, report_status_is_final]
+               report_weight_kg, report_status_type, report_status_is_final]
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
@@ -306,7 +314,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "store_name", "courier_name", "courier_park",
                                              "return_reason", "return_comment", "cancel_comment",
                                              "route_id", "lon", "lat", "store_lon", "store_lat", "price_of_goods", "items",
-                                             "type", "is_final"])
+                                             "extracted_weight", "type", "is_final"])
     orders_with_pod = get_pod_orders()
     result_frame = result_frame.apply(lambda row: calculate_distance(row), axis=1)
     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
