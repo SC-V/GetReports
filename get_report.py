@@ -296,7 +296,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             report_weight_kg = ""
             for item in claim['items']:
                 if re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE):
-                    report_weight_kg = report_weight_kg + str(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0]) + " |"
+                    report_weight_kg = report_weight_kg + str(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0][0]) + " |"
         except:
             report_weight_kg = "Not found"
         row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id,
