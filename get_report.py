@@ -285,6 +285,12 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                 report_price_of_goods += float(item['cost_value'])
         except:
             report_price_of_goods = 0
+        try:
+            report_goods = ""
+            for item in claim['items']:
+                report_goods = report_goods + str(item['title']) + " |"
+        except:
+            report_goods = "Not specified"
         row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
