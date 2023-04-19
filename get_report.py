@@ -293,10 +293,10 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         except:
             report_goods = "Not specified"
         try:
-            report_weight_kg = ""
+            report_weight_kg = 0.0
             for item in claim['items']:
                 if re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE):
-                    report_weight_kg = report_weight_kg + str(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0][0]) + " |"
+                    report_weight_kg = report_weight_kg + float(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0][0])
         except:
             report_weight_kg = "Not found"
         row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id,
