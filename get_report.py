@@ -454,7 +454,7 @@ st.caption(
 
 with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
     df.to_excel(writer, sheet_name='routes_report')
-    writer.save()
+    writer.close()
 
     st.download_button(
         label="Download report as xlsx",
