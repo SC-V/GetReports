@@ -350,7 +350,7 @@ if selected_client == "Petco":
 
 option = st.sidebar.selectbox(
     "Select report date:",
-    ["Today", "Yesterday", "Tomorrow", "Monthly", "April"]
+    ["Today", "Yesterday", "Tomorrow", "Monthly", "May"]
 )
 
 
@@ -358,9 +358,9 @@ option = st.sidebar.selectbox(
 def get_cached_report(period):
 
     if option == "Monthly":
+        report = get_report(period, start_="2023-06-01", end_="2023-06-31")
+    elif option == "May":
         report = get_report(period, start_="2023-05-01", end_="2023-05-31")
-    elif option == "April":
-        report = get_report(period, start_="2023-04-01", end_="2023-04-30")
     else:
         report = get_report(period)
     df_rnt = report[~report['status'].isin(["cancelled", "performer_not_found", "failed"])]
