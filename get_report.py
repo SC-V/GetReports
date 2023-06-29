@@ -10,7 +10,6 @@ import haversine as hs
 from pytz import timezone
 from googleapiclient import discovery
 import streamlit as st
-import streamlit_analytics
 import pydeck as pdk
 
 st.set_page_config(layout="wide")
@@ -339,7 +338,6 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
     return result_frame
 
 
-streamlit_analytics.start_tracking()
 st.markdown(f"# Routes report")
 
 if st.sidebar.button("Refresh data", type="primary"):
@@ -573,5 +571,3 @@ with st.expander(":clipboard: Store/ route details"):
     if only_cats:
         pivot_report_frame = pivot_report_frame[pivot_report_frame['cutoff'].str.contains('🙀')]
     st.dataframe(pivot_report_frame, use_container_width=True)
-
-streamlit_analytics.stop_tracking()
