@@ -200,7 +200,8 @@ def get_claims(date_from, date_to, cursor=0):
     try:
         return claims['claims'], cursor
     except:
-        return response.text
+        st.write(response.text)
+        return claims['claims'], cursor
 
 
 def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
