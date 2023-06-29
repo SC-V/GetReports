@@ -365,7 +365,7 @@ option = st.sidebar.selectbox(
 def get_cached_report(period):
 
     if option == "Monthly":
-        report = get_report(period, start_="2023-06-01", end_="2023-06-31")
+        report = get_report(period, start_="2023-06-01", end_="2023-06-30")
     elif option == "May":
         report = get_report(period, start_="2023-05-01", end_="2023-05-31")
     else:
