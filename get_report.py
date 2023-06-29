@@ -200,7 +200,8 @@ def get_claims(date_from, date_to, cursor=0):
     try:
         return claims['claims'], cursor
     except:
-        st.write(response.request)
+        st.write(response.request.body)
+        st.write(response.request.headers)
         st.write(response.text)
         return claims['claims'], cursor
 
