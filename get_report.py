@@ -200,7 +200,7 @@ def get_claims(date_from, date_to, cursor=0):
     try:
         return claims['claims'], cursor
     except:
-        st.write(payload)
+        st.write(response.request)
         st.write(response.text)
         return claims['claims'], cursor
 
