@@ -198,10 +198,11 @@ def get_claims(date_from, date_to, cursor=0):
     except:
         print("LAST PAGE PROCESSED")
     try:
+        st.write(response.request.body)
+        st.write(response.code)
         return claims['claims'], cursor
     except:
         st.write(response.request.body)
-        st.write(response.request.headers)
         st.write(response.text)
         return claims['claims'], cursor
 
