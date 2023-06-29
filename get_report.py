@@ -196,14 +196,7 @@ def get_claims(date_from, date_to, cursor=0):
         print(f"CURSOR: {cursor}")
     except:
         print("LAST PAGE PROCESSED")
-    try:
-        st.write(response.request.body)
-        st.write(response.code)
-        return claims['claims'], cursor
-    except:
-        st.write(response.request.body)
-        st.write(response.text)
-        return claims['claims'], cursor
+    return claims['claims'], cursor
 
 
 def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
