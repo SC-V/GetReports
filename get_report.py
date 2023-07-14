@@ -241,6 +241,10 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report_cutoff = cutoff_time.strftime("%Y-%m-%d %H:%M")
         report_client_id = claim['route_points'][1]['external_order_id']
         report_claim_id = claim['id']
+        try:
+          report_comment = claim['comment']
+        except:
+          report_comment = "Missing comment in claim"
         report_pickup_address = claim['route_points'][0]['address']['fullname']
         report_pod_point_id = str(claim['route_points'][1]['id'])
         report_receiver_address = claim['route_points'][1]['address']['fullname']
@@ -298,7 +302,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                     report_weight_kg = report_weight_kg + float(re.findall(r"(\d*\.?\d+)\s*(kgs?)\b", str(item['title']), flags=re.IGNORECASE)[0][0])
         except:
             report_weight_kg = "Not found"
-        row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id,
+        row = [report_cutoff, report_client_id, report_claim_id, report_pod_point_id, report_comment,
                report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name,
                report_status, report_status_time, report_store_name, report_courier_name, report_courier_park,
                report_return_reason, report_return_comment, report_autocancel_reason, report_route_id,
@@ -307,7 +311,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
         report.append(row)
 
     result_frame = pandas.DataFrame(report,
-                                    columns=["cutoff", "client_id", "claim_id", "pod_point_id",
+                                    columns=["cutoff", "client_id", "claim_id", "pod_point_id", "comment",
                                              "pickup_address", "receiver_address", "receiver_phone",
                                              "receiver_name", "status", "status_time",
                                              "store_name", "courier_name", "courier_park",
